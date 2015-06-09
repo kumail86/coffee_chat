@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150608195314) do
+ActiveRecord::Schema.define(version: 20150609062853) do
 
   create_table "meetings", force: :cascade do |t|
     t.integer  "requestor_id"
     t.integer  "receiver_id"
-    t.boolean  "accepted"
+    t.string   "meeting_status"
     t.string   "meeting_location_name"
     t.string   "meeting_location_address"
     t.datetime "created_at",               null: false

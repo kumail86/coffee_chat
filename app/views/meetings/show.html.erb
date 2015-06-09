@@ -11,7 +11,7 @@
   <% @pending_meetings_sent.each do |chat| %>
     <li>
       <%= chat.receiver.first_name %>
-      <%= chat.accepted %>
+      <%= chat.meeting_status %>
     </li>
   <% end %>
 </ul>
@@ -20,7 +20,7 @@
   <% @pending_meetings_received.each do |chat| %>
     <li>
       <%= chat.requestor.first_name %>
-      <%= chat.accepted %>
+      <%= chat.meeting_status %>
 
       <form action="/accept_meeting/<%= chat.requestor_id%>" method="post" class="form-horizontal">
       <div class="form-group">

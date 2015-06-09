@@ -19,15 +19,39 @@
                 <%= near_user.position %>
               </dd>
             </dl>
-              <form action="/request_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
-                <p>
-                  <div class="form-group">
-                    <button class="btn btn-success">
-                      Request Meeting
-                    </button>
-                  </div>
-                </p>
-              </form>
+
+              <% if Meeting.exists?(:requestor_id => current_user.id)%>
+                  <% @meet_exist = Meeting.find_by(:requestor_id => current_user.id) %>
+                  <% if @meet_exist.receiver_id != near_user.id%>
+                    <form action="/request_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
+                      <p>
+                        <div class="form-group">
+                          <button class="btn btn-success">
+                            Request2
+                          </button>
+                      </p>
+                    </form>
+                  <% else %>
+                    <form action="/cancel_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
+                      <p>
+                        <div class="form-group">
+                          <button class="btn btn-primary">
+                            Cancel
+                          </button>
+                      </p>
+                    </form>
+                  <% end %>
+                <% else %>
+                  <form action="/request_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
+                      <p>
+                        <div class="form-group">
+                          <button class="btn btn-success">
+                            Request
+                          </button>
+                      </p>
+                    </form>
+                <% end %>
+            </div>
           </div>
         </div>
     </div>

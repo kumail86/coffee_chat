@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -59,11 +60,16 @@ Rails.application.routes.draw do
   get "/home", :controller => "home", :action => "index"
   #--------------------------------------------------------
 
-  #Routes for Professional View
-  #get "/professional", :controller => "professional", :action => "index"
+  #Routes for Networking View
+  get "/networking", :controller => "users", :action => "index"
+
+  #Routes for Meetings
+  get "/my_meetings", :controller => "meetings", :action => "show"
+  post "/request_meeting/:id", :controller => "meetings", :action => "meeting_request"
+  post "/accept_meeting/:id", :controller => "meetings", :action => "accept"
 
   #--------------------------------------------------------
   #Routes for User
-  #get "/users", :controller => "users", :action => "index"
-  #post "/update_user/:id", :controller => "users", :action => "update"
+  get "/user_profile", :controller => "users", :action => "profile"
+  post "/update_user/:id", :controller => "users", :action => "update"
 end

@@ -1,0 +1,35 @@
+ <% current_user.nearbys(2000).each do |near_user| %>
+  <% if near_user.networking_status%>
+    <div class="row isotope-container">
+        <div class="panel panel-default">
+          <div class="panel-body">
+              <div class="col-md-2">
+                <img src=<%= near_user.pic_url%> align="left" height="100" width="100">
+              </div>
+            <dl>
+              <dt>
+                <%= near_user.first_name %>
+                <%= near_user.last_name %>
+                (<%= near_user.distance.round(2) %> miles)
+              </dt>
+              <dd>
+                <%= near_user.company %>
+              </dd>
+              <dd>
+                <%= near_user.position %>
+              </dd>
+            </dl>
+              <form action="/request_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
+                <p>
+                  <div class="form-group">
+                    <button class="btn btn-success">
+                      Request Meeting
+                    </button>
+                  </div>
+                </p>
+              </form>
+          </div>
+        </div>
+    </div>
+  <% end %>
+<% end %>

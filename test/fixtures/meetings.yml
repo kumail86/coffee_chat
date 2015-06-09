@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  requestor_id: 1
+  receiver_id: 1
+  accepted: false
+  meeting_location_name: MyString
+  meeting_location_address: MyString
+
+two:
+  requestor_id: 1
+  receiver_id: 1
+  accepted: false
+  meeting_location_name: MyString
+  meeting_location_address: MyString

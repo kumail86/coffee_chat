@@ -1,5 +1,10 @@
 source 'https://rubygems.org'
 
+#Geocoder gem
+gem 'geocoder'
+
+#Devise gem for sign-in/sign-out
+gem 'devise'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.1'

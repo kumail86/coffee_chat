@@ -16,6 +16,7 @@
 
 
   <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -41,7 +42,21 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="/professional">Professional</a></li>
+          <li><a href="/networking">Networking</a></li>
+          <% if current_user != nil %>
+            <li><a href="/my_meetings">My Coffee Chats</a></li>
+            <li><a href="/user_profile">Profile Settings</a></li>
+          <% end %>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <% if current_user != nil %>
+            <li><a href="/users/edit">Hello <%= current_user.first_name %>!</a></li>
+            <li><a href="/users/sign_out" data-method="delete" rel="nofollow">Sign out</a></li>
+          <% else %>
+            <li><a href="/users/sign_up">Sign up</a></li>
+            <li><a href="/users/sign_in">Sign in</a></li>
+          <% end %>
         </ul>
 
 

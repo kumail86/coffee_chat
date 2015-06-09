@@ -1,0 +1,38 @@
+<h1>My Coffee Chats</h1>
+
+<h2>Confirmed Coffee Chats</h2>
+<ul>
+  <% @confirmed_meetings.each do |chat| %>
+    <li><%= chat.requestor.first_name %></li>
+  <% end %>
+</ul>
+<h2>Pending Coffee Chats Sent</h2>
+<ul>
+  <% @pending_meetings_sent.each do |chat| %>
+    <li>
+      <%= chat.receiver.first_name %>
+      <%= chat.accepted %>
+    </li>
+  <% end %>
+</ul>
+<h2>Pending Coffee Chats Received</h2>
+<ul>
+  <% @pending_meetings_received.each do |chat| %>
+    <li>
+      <%= chat.requestor.first_name %>
+      <%= chat.accepted %>
+
+      <form action="/accept_meeting/<%= chat.requestor_id%>" method="post" class="form-horizontal">
+      <div class="form-group">
+        <button class="btn btn-success">
+          Accept
+        </button>
+      </div>
+    </form>
+
+
+    </li>
+  <% end %>
+</ul>
+
+

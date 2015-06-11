@@ -60,13 +60,16 @@ Rails.application.routes.draw do
   get "/home", :controller => "home", :action => "index"
   #--------------------------------------------------------
 
-  #Routes for Networking View
+  #Routes for Explore View
   get "/networking", :controller => "users", :action => "index"
+  post "/networking", :controller => "users", :action => "index"
 
   #Routes for Meetings
   get "/my_meetings", :controller => "meetings", :action => "show"
   post "/request_meeting/:id", :controller => "meetings", :action => "meeting_request"
   post "/accept_meeting/:id", :controller => "meetings", :action => "accept"
+  post "/cancel_meeting_find/:id", :controller => "meetings", :action => "cancel_from_find"
+  post "/cancel_meeting_chats/:id", :controller => "meetings", :action => "cancel_from_chat"
 
   #--------------------------------------------------------
   #Routes for User

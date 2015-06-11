@@ -1,16 +1,74 @@
- <% current_user.nearbys(2000).each do |near_user| %>
-  <% if near_user.networking_status%>
-    <div class="row isotope-container">
+<form action="/networking" method="post" class="form-horizontal">
+  <div class="row">
+    <div class="col-md-3">
+      <h4>Select Search Radius</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2" align="left">
+      <select name="radius">
+        <% case @radius %>
+        <% when 1 %>
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        <% when 2 %>
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        <% when 3 %>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        <% when 5 %>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="5" selected>5</option>
+          <option value="10">10</option>
+        <% when 10 %>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+        <% else %>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        <% end %>
+      </select>
+    </div>
+      <div class="form-group">
+        <button class="btn btn-primary">
+          Update
+        </button>
+      </div>
+    </div>
+</form>
+<br>
+<% if current_user.location.present? %>
+  <% @professionals.each do |near_user| %>
+    <% if near_user.networking_status%>
+      <div class="row isotope-container">
         <div class="panel panel-default">
           <div class="panel-body">
-              <div class="col-md-2">
-                <img src=<%= near_user.pic_url%> align="left" height="100" width="100">
-              </div>
+            <div class="col-md-2">
+              <img src=<%= near_user.pic_url%> align="left" height="100" width="100">
+            </div>
             <dl>
               <dt>
                 <%= near_user.first_name %>
                 <%= near_user.last_name %>
-                (<%= near_user.distance.round(2) %> miles)
+                (<%= near_user.distance_from([current_user.latitude,current_user.longitude]).round(2) %> miles)
               </dt>
               <dd>
                 <%= near_user.company %>
@@ -18,42 +76,93 @@
               <dd>
                 <%= near_user.position %>
               </dd>
+
+
+              <% meeting = Meeting.where("requestor_id = ? AND receiver_id = ?", current_user.id, near_user.id)%>
+              <% meeting2 = Meeting.where("requestor_id = ? AND receiver_id = ?", near_user.id, current_user.id)%>
+              <% if meeting.any?%>
+                <% if meeting.first.meeting_status == "confirmed"%>
+                  <dd>
+                    <span class="label label-success">Confirmed Chat</span>
+                  </dd>
+                <% else %>
+                  <dd>
+                    <span class="label label-warning">Chat Request Sent</span>
+                  </dd>
+                <% end %>
+              <% elsif meeting2.any? %>
+                <% if meeting2.first.meeting_status == "confirmed"%>
+                  <dd>
+                    <span class="label label-success">Confirmed Chat</span>
+                  </dd>
+                <% else %>
+                  <dd>
+                    <span class="label label-warning">Chat Request Received</span>
+                  </dd>
+                <% end %>
+              <% else %>
+                <form action="/request_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
+                  <p>
+                    <div class="form-group">
+                      <button class="btn btn-success">
+                        Request
+                      </button>
+                    </div>
+                  </p>
+                </form>
+              <% end %>
+            </dl>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+<% @users.each do |user| %>
+  <% if user.networking_status%>
+    <div class="row isotope-container">
+        <div class="panel panel-default">
+          <div class="panel-body">
+              <div class="col-md-2">
+                <img src=<%= user.pic_url%> align="left" height="100" width="100">
+              </div>
+            <dl>
+              <dt>
+                <%= user.first_name %>
+                <%= user.last_name %>
+              </dt>
+              <dd>
+                <%= user.company %>
+              </dd>
+              <dd>
+                <%= user.position %>
+              </dd>
             </dl>
 
-              <% if Meeting.exists?(:requestor_id => current_user.id)%>
-                  <% @meet_exist = Meeting.find_by(:requestor_id => current_user.id) %>
-                  <% if @meet_exist.receiver_id != near_user.id%>
-                    <form action="/request_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
-                      <p>
-                        <div class="form-group">
-                          <button class="btn btn-success">
-                            Request2
-                          </button>
-                      </p>
-                    </form>
-                  <% else %>
-                    <form action="/cancel_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
-                      <p>
-                        <div class="form-group">
-                          <button class="btn btn-primary">
-                            Cancel
-                          </button>
-                      </p>
-                    </form>
-                  <% end %>
-                <% else %>
-                  <form action="/request_meeting/<%= near_user.id %>" method="post" class="form-horizontal">
-                      <p>
-                        <div class="form-group">
-                          <button class="btn btn-success">
-                            Request
-                          </button>
-                      </p>
-                    </form>
-                <% end %>
+              <% meeting = Meeting.where("requestor_id = ? AND receiver_id = ?", current_user.id, user.id)%>
+              <% if meeting.any?%>
+                <form action="/cancel_meeting_find/<%= meeting.first.id %>" method="post" class="form-horizontal">
+                  <p>
+                    <div class="form-group">
+                      <button class="btn btn-primary">
+                        Cancel
+                      </button>
+                  </p>
+                </form>
+              <% else %>
+                <form action="/request_meeting/<%= user.id %>" method="post" class="form-horizontal">
+                  <p>
+                    <div class="form-group">
+                      <button class="btn btn-success">
+                        Request
+                      </button>
+                  </p>
+                </form>
+              <% end %>
             </div>
           </div>
         </div>
-    </div>
+      </div>
+    <% end %>
   <% end %>
 <% end %>

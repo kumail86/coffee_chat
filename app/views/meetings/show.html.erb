@@ -1,38 +1,176 @@
-<h1>My Coffee Chats</h1>
-
-<h2>Confirmed Coffee Chats</h2>
-<ul>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Confirmed Chats</h3>
+  </div>
   <% @confirmed_meetings.each do |chat| %>
-    <li><%= chat.requestor.first_name %></li>
-  <% end %>
-</ul>
-<h2>Pending Coffee Chats Sent</h2>
-<ul>
-  <% @pending_meetings_sent.each do |chat| %>
-    <li>
-      <%= chat.receiver.first_name %>
-      <%= chat.meeting_status %>
-    </li>
-  <% end %>
-</ul>
-<h2>Pending Coffee Chats Received</h2>
-<ul>
-  <% @pending_meetings_received.each do |chat| %>
-    <li>
-      <%= chat.requestor.first_name %>
-      <%= chat.meeting_status %>
-
-      <form action="/accept_meeting/<%= chat.requestor_id%>" method="post" class="form-horizontal">
-      <div class="form-group">
-        <button class="btn btn-success">
-          Accept
-        </button>
+    <% if chat.requestor.id == current_user.id %>
+      <div class="panel-body">
+        <div class="col-md-2">
+          <img src=<%= chat.receiver.pic_url%> align="left" height="100" width="100">
+        </div>
+        <div class="col-md-2">
+          <dl>
+            <dt>
+              <%= chat.receiver.first_name %>
+              <%= chat.receiver.last_name %>
+            </dt>
+            <dd>
+              <%= chat.receiver.company %>
+            </dd>
+            <dd>
+              <%= chat.receiver.position %>
+            </dd>
+            <dd>
+                <%= chat.receiver.phone_number %>
+            </dd>
+            <dd>
+              <% meeting = Meeting.where("requestor_id = ? AND receiver_id = ?", current_user.id, chat.receiver.id)%>
+              <form action="/cancel_meeting_chats/<%= meeting.first.id%>" method="post" class="form-horizontal">
+                <div class="form-group">
+                  <button class="btn btn-success">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </dd>
+          </dl>
+        </div>
+        <div class="col-md-4">
+          <b>Meeting Location:</b> <%= chat.meeting_location_name %><br>
+          <b>Meeting Address:</b> <%= chat.meeting_location_address %><br>
+          <b>Meeting Time</b> <%= chat.meeting_time %>
+        </div>
       </div>
-    </form>
-
-
-    </li>
+    <% else %>
+      <div class="panel-body">
+        <div class="col-md-2">
+          <img src=<%= chat.requestor.pic_url%> align="left" height="100" width="100">
+        </div>
+        <div class="col-md-2">
+          <dl>
+            <dt>
+              <%= chat.requestor.first_name %>
+              <%= chat.requestor.last_name %>
+            </dt>
+            <dd>
+              <%= chat.requestor.company %>
+            </dd>
+            <dd>
+              <%= chat.requestor.position %>
+            </dd>
+            <dd>
+                <%= chat.requestor.phone_number %>
+            </dd>
+            <dd>
+              <% meeting = Meeting.where("requestor_id = ? AND receiver_id = ?", chat.requestor.id, current_user.id)%>
+              <form action="/cancel_meeting_chats/<%= meeting.first.id%>" method="post" class="form-horizontal">
+                <div class="form-group">
+                  <button class="btn btn-success">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </dd>
+          </dl>
+        </div>
+        <div class="col-md-4">
+          <b>Meeting Location</b> <%= chat.meeting_location_name %> <br>
+          <b>Meeting Address</b> <%= chat.meeting_location_address %><br><b>Meeting Time</b> <%= chat.meeting_time %>
+        </div>
+      </div>
+    <% end %>
   <% end %>
-</ul>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Chat Requests Sent</h3>
+  </div>
+  <% @pending_meetings_sent.each do |chat| %>
+    <div class="panel-body">
+      <div class="col-md-2">
+        <img src=<%= chat.receiver.pic_url%> align="left" height="100" width="100">
+      </div>
+      <div class="col-lft-2">
+        <dl>
+          <dt>
+            <%= chat.receiver.first_name %>
+            <%= chat.receiver.last_name %>
+          </dt>
+          <dd>
+            <%= chat.receiver.company %>
+          </dd>
+          <dd>
+            <%= chat.receiver.position %>
+          </dd>
+          <dd>
+            <% meeting = Meeting.where("requestor_id = ? AND receiver_id = ?", current_user.id, chat.receiver.id)%>
+            <form action="/cancel_meeting_chats/<%= meeting.first.id%>" method="post" class="form-horizontal">
+              <div class="form-group">
+                <button class="btn btn-success">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Chat Requests Received</h3>
+  </div>
+  <% @pending_meetings_received.each do |chat| %>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-2">
+          <img src=<%= chat.requestor.pic_url%> align="left" height="100" width="100">
+        </div>
+        <div class="col-md-2">
+          <dl>
+            <dt>
+              <%= chat.requestor.first_name %>
+              <%= chat.requestor.last_name %>
+            </dt>
+            <dd>
+              <%= chat.requestor.company %>
+            </dd>
+            <dd>
+              <%= chat.requestor.position %>
+            </dd>
+          </dl>
+        </div>
+        <div class="col-md-2">
+          <% meeting = Meeting.where("requestor_id = ? AND receiver_id = ?", chat.requestor.id, current_user.id)%>
+          <form action="/cancel_meeting_chats/<%= meeting.first.id%>" method="post" class="form-horizontal">
+            <button class="btn btn-primary">
+              Cancel
+            </button>
+          </form>
+          <form action="/accept_meeting/<%= meeting.first.id%>" method="post" class="form-horizontal">
+            <button class="btn btn-success">
+              Accept
+            </button>
+        </div>
+        <div class="col-md-2">
+            Enter Meeting Location
+            <input type="text" id="location_name" name="location_name" placeholder="Location Name" class="form-control">
+            Enter Location Address
+            <input type="text" id="location_address" name="location_address" placeholder="Location Address" class="form-control">
+        </div>
+        <div class="col-md-2">
+            Enter Time
+            <input type="time" id="meeting_time" name="meeting_time" placeholder="Location Address" class="form-control">
+          </form>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
 
 

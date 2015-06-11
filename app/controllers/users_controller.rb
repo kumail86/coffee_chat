@@ -6,6 +6,12 @@ class UsersController < ApplicationController
 
   def index
     @users = User.where(:networking_status => true)
+    if params[:radius].present?
+      @radius = params[:radius].to_i
+      @professionals = current_user.nearbys(@radius)
+    else
+      @professionals = current_user.nearbys(1584)
+    end
   end
 
   def update
